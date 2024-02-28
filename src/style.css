@@ -8,6 +8,7 @@
     margin: 0;
     box-sizing: border-box;
     scroll-behavior: smooth;
+   
 }
   
 a {
@@ -21,11 +22,13 @@ ul {
 
 
 body {
-    
+    background: linear-gradient(135deg, #00feba, #5b548a);
     font-weight: 400;
     overflow-x: hidden;
     background-color: #F5F7FA;
 }
+
+
 
 
 .container {
@@ -33,5 +36,6 @@ body {
     max-width: 1350px;
     margin: 0 auto;
     padding: 0 20px;
+    
 }
 

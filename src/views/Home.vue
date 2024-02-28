@@ -5,8 +5,10 @@
         <div class="min-h-[calc(100vh-160px)]">
             <div class="flex gap-x-5  py-4">
                 <div class="w-[70%] border border-slate-400 p-4 rounded-lg">
-                    <div v-if="!loader" class="flex items-center justify-center h-full">
-                        loading ...
+                    <div v-if="loader" class="flex items-center justify-center h-full">
+                       
+                     
+                        <i class="pi pi-spin pi-spinner text-[50px]"></i>
                     </div>
                     <div v-else class="flex flex-col">
                         <div>
@@ -168,6 +170,7 @@
     import { ref, watch } from "vue";
     import axios from "axios";
     import { onMounted } from "vue";
+    
 
     const link = ref('');
     const temperature = ref('');

@@ -5,10 +5,26 @@
         <div class="min-h-[calc(100vh-160px)]">
             <div class="flex gap-x-5  py-4">
                 <div class="w-[70%] border border-slate-400 p-4 rounded-lg">
-                    <div class="flex flex-col">
+                    <div v-if="!loader" class="flex items-center justify-center h-full">
+                        loading ...
+                    </div>
+                    <div v-else class="flex flex-col">
                         <div>
                             <h2 class="font-semibold text-[30px] capitalize">{{ region }}</h2>
-                            <p class="font-medium text-[15px]">Monday</p>
+                            <p class="font-medium text-[15px]">
+                                {{
+                                    new Date(dayNames[0]?.dt * 1000).toLocaleDateString("en", {
+                                    weekday: "long",
+                                    })
+                                }},
+
+                                {{ 
+                                    new Date(dayNames[0]?.dt * 1000).toLocaleString('en-US', {
+                                        day: '2-digit',
+                                    })
+                                }}
+
+                            </p>
                         </div>
 
                         <div class="flex items-center justify-between">
@@ -16,11 +32,41 @@
                                 <span class="font-bold">{{ temperature }}</span> <span>&deg; C</span>
                             </div>
                             <img :src="'https://openweathermap.org/img/wn/' + link + '@2x.png'" alt="weather" class="w-[250px] object-cover">
+                        
                         </div>
 
-                        <div>
+                        
+                            
+                            <div class="grid grid-cols-4 gap-4">
+                                <template v-for="(item, index) in dayNames" :key="index"> 
+                                    <div class=" bg-white py-4 border border-gray-200 rounded-xl">
+                                        <p class="text-center">
+                                            {{
+                                                new Date(item.dt * 1000).toLocaleDateString("en", {
+                                                    weekday: "long",
+                                                })
+                                            }}
+                                            ,
+                                            <span>
+                                                {{ 
+                                                    new Date(item.dt * 1000).toLocaleString('en-US', {
+                                                        day: '2-digit',
+                                                    })
+                                                 }}
+                                            </span>
+                                        </p>
+                                        <img :src="'https://openweathermap.org/img/wn/' + item.weather[0].icon + '@2x.png'" alt="weather" class="w-[150px] object-cover mx-auto">
+                                        
+                                        <p class="flex items-center justify-center font-semibold">
+                                            <span class="text-[16px]">{{ item.temp.day }}</span>
 
-                        </div>
+                                            <sup>&deg; C</sup>
+                                        </p>
+                                    </div>
+                                </template>
+                            </div>
+                           
+                        
                     </div>
                 </div>
                 <div class="w-[25%] bg-slate-200 py-4 px-2 rounded-lg">
@@ -110,9 +156,6 @@
                             </label>
                         </li>
                         
-                        
-                        
-                        
                     </ul>
                 </div>
             </div>
@@ -128,7 +171,9 @@
 
     const link = ref('');
     const temperature = ref('');
+    const dayNames = ref([]);
     const region = ref('Tashkent');
+    const loader  = ref(false);
     const apiKey = "9dd86907fe501cec50da3d087e4e9dc0";
     
     const getName = (value) => {
@@ -149,18 +194,18 @@
     };
 
     const getDatafor7days = async (lat, lon) => {
-        
+        loader.value = true
         let url = `https://api.openweathermap.org/data/2.8/onecall?lat=${lat}&lon=${lon}&units=metric&exclude=minutely,hourly,alerts&appid=${apiKey}`
         try {
             const res = await axios(url);
             const data = res.data;
-            console.log("data", data);
-            
+            dayNames.value = data.daily;
             link.value = data.current.weather[0].icon;
             temperature.value = data.current.temp;
-
+            loader.value = false;
         } catch (error) {
             console.log(error);
+            loader.value = false
         }
     };
 
